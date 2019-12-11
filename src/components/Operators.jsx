@@ -3,7 +3,7 @@ import React from "react"
 import Operator from "./Operator"
 
 function Operators(props) {
-    const values = ["/", "x", "-", "+", "="];
+    const values = ["/", "*", "-", "+", "="];
 
     return (
         <div>

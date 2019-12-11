@@ -19,6 +19,7 @@ class Calculator extends React.Component {
             solved: false
         }
         this.handleClick = this.handleClick.bind(this)
+        this.handleKeyboardInput = this.handleKeyboardInput.bind(this)
     }
 
     handleClick(event) {
@@ -31,7 +32,7 @@ class Calculator extends React.Component {
         
         else if (
             input === "/" ||
-            input === "x" ||
+            input === "*" ||
             input === "-" ||
             input === "+") {
                 
@@ -102,7 +103,7 @@ class Calculator extends React.Component {
         if (equationAsArray.length > 3) {
             //Multiply/Divide
             for (let i = 0; i < equationAsArray.length; i++) {
-                if (equationAsArray[i] === "x") {
+                if (equationAsArray[i] === "*") {
                     const result = parseFloat(equationAsArray[i-1]) * parseFloat(equationAsArray[i+1])
                     equationAsArray = equationAsArray.slice(0, i-1).concat([result]).concat(equationAsArray.slice(i+2, equationAsArray.length));
                 } else if (equationAsArray[i] === "/") {
@@ -132,7 +133,7 @@ class Calculator extends React.Component {
             case "-":
                 answer = parseFloat(equationAsArray[0]) - parseFloat(equationAsArray[2]);
                 break;
-            case "x":
+            case "*":
                 answer = parseFloat(equationAsArray[0]) * parseFloat(equationAsArray[2]);
                 break;
             default:
@@ -184,6 +185,48 @@ class Calculator extends React.Component {
                 calculatorValue: "" + prevState.calculatorValue + input
             }
         })
+    }
+
+    handleKeyboardInput(event) {
+        const keyPressed = event.key;
+       
+        const keysAllowed = {
+            numbers: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            operators: ["+", "-", "*", "/"],
+            functions: ["c", ".", "Enter"]
+        }
+
+        //console.log(keyPressed);
+
+        if (keysAllowed.numbers.includes(keyPressed)) {
+            this.concatNumber(keyPressed)
+        } else if (keysAllowed.operators.includes(keyPressed)) {
+            this.setOperator(keyPressed)
+        } else if (keysAllowed.functions.includes(keyPressed)) {
+
+            switch (keyPressed) {
+                case "c":
+                    this.clearCalculator();
+                    break;
+
+                case ".":
+                    this.addDecimal();
+                    break;
+
+                case "Enter":
+                    this.calculate();
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+
+    }
+
+    componentDidMount() {
+        document.addEventListener("keydown", this.handleKeyboardInput)
     }
 
     render() {
